@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 mediapipe
 torch
 tqdm
+=======
+# Installation: pip install -r requirements.txt
+
+# Nearest-Neighbor
+scikit-learn
+pandas
+>>>>>>> refs/remotes/origin/main
