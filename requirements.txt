@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 mediapipe
 torch
 tqdm
-=======
-# Installation: pip install -r requirements.txt
 
-# Nearest-Neighbor
+numpy
 scikit-learn
 pandas
->>>>>>> refs/remotes/origin/main

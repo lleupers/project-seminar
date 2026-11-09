@@ -2,9 +2,8 @@ data/*
 !data/.gitkeep
 raw_data/*
 !raw_data/.gitkeep
-<<<<<<< HEAD
 .vscode/
 __pycache__
-=======
 .vscode/settings.json
->>>>>>> refs/remotes/origin/main
+.venv/
+autoencoder/outputs/
