@@ -1,11 +1,12 @@
-import mediapipe as mp
 import argparse
 import glob
 import os
 import torch
+import numpy as np
 
 from tqdm import tqdm
 from torch.utils.data import Dataset
+from utils import LandmarkProcessing
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp"}
 
@@ -61,6 +62,12 @@ if __name__ == "__main__":
         help="Path to the raw dataset of hand images",
     )
     parser.add_argument(
+        "--test_split",
+        type=float,
+        default=0.1,
+        help="Test split of dataset",
+    )
+    parser.add_argument(
         "--hand_model_path",
         type=str,
         default="./mediapipe_models/hand_landmarker.task",
@@ -79,48 +86,35 @@ if __name__ == "__main__":
         help="Minimum magnitude to accept detection",
     )
     args = parser.parse_args()
+    processor = LandmarkProcessing("./mediapipe_models/hand_landmarker.task")
 
-    # initialize hand detectors
-    BaseOptions = mp.tasks.BaseOptions
-    HandLandmarker = mp.tasks.vision.HandLandmarker
-    HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
-    VisionRunningMode = mp.tasks.vision.RunningMode
+    # create train and test folders
+    try:
+        train_path = args.dataset_path + "/train"
+        os.mkdir(train_path)
+    except FileExistsError:
+        print("train folder already exists.")
 
-    options = HandLandmarkerOptions(
-        base_options=BaseOptions(model_asset_path=args.hand_model_path),
-        running_mode=VisionRunningMode.IMAGE,
-        num_hands=1,
-    )
+    try:
+        test_path = args.dataset_path + "/test"
+        os.mkdir(test_path)
+    except FileExistsError:
+        print("test folder already exists.")
 
-    with HandLandmarker.create_from_options(options) as landmarker:
-        # get all image files
-        glob_path = f"{args.raw_dataset_path}/**/*"
-        pbar = tqdm(enumerate(glob.iglob(glob_path, recursive=True)))
-        for p, path in pbar:
-            # check if file is a valid image
-            if (
-                os.path.isfile(path)
-                and os.path.splitext(path)[1].lower() in IMAGE_EXTENSIONS
-            ):
-                for _ in range(10):
-                    mp_image = mp.Image.create_from_file(path)  # load image
-                    result = landmarker.detect(mp_image)  # extract landmarks
-
-                    # turn landmarks into vector
-                    sample = torch.empty(size=(21, 3), dtype=torch.float)
-                    landmarks = result.hand_world_landmarks
-                    for l, landmark in enumerate(landmarks):
-                        sample[l] = landmark[l].x
-                        sample[l] = landmark[l].y
-                        sample[l] = landmark[l].z
-                    # sometimes landmarks collapse to zero.
-                    if (
-                        torch.mean(sample) > args.min_magnitude
-                    ):  # filter landmarks that collapse
-                        break
-                sample = (
-                    sample / torch.linalg.norm(sample, dim=1).max()
-                )  # normalize landmarks
-                # save sample
-                save_path = f"{args.dataset_path}/{p:05d}.pt"
-                torch.save(sample, save_path)
+    # get all image files
+    glob_path = f"{args.raw_dataset_path}/**/*"
+    pbar = tqdm(enumerate(glob.iglob(glob_path, recursive=True)))
+    for p, path in pbar:
+        # check if file is a valid image
+        if (
+            os.path.isfile(path)
+            and os.path.splitext(path)[1].lower() in IMAGE_EXTENSIONS
+        ):
+            sample = processor.img2landmark(path)
+            # save sample
+            image_class = path.split("/")[-2]  # get image class
+            if np.random.uniform() < args.test_split:
+                save_path = f"{test_path}/{p:05d}-{image_class}.pt"
+            else:
+                save_path = f"{train_path}/{p:05d}-{image_class}.pt"
+            torch.save(sample, save_path)
