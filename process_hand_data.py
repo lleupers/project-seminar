@@ -73,18 +73,6 @@ if __name__ == "__main__":
         default="./mediapipe_models/hand_landmarker.task",
         help="Path to the hand pose detector",
     )
-    parser.add_argument(
-        "--num_retries",
-        type=int,
-        default=10,
-        help="Number of times to attempt detection",
-    )
-    parser.add_argument(
-        "--min_magnitude",
-        type=float,
-        default=0.1,
-        help="Minimum magnitude to accept detection",
-    )
     args = parser.parse_args()
     processor = LandmarkProcessing("./mediapipe_models/hand_landmarker.task")
 
