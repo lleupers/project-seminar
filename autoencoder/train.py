@@ -49,7 +49,11 @@ def train_autoencoder(data_dir, output_dir, epochs=100, latent_dim=16):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     torch.manual_seed(42)
-    dataset = PoseDataset(data_dir=data_dir)
+    train_dir = data_dir / "train"
+    if train_dir.is_dir() or (data_dir / "test").is_dir():
+        dataset = PoseDataset(data_dir=train_dir)
+    else:
+        dataset = PoseDataset(data_dir=data_dir)
 
     if len(dataset) < 2:
         raise ValueError("Mindestens zwei Posen für Training und Validierung erforderlich.")
