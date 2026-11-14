@@ -1,4 +1,5 @@
 mediapipe
+opencv-contrib-python
 torch
 tqdm
 

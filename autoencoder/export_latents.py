@@ -16,11 +16,11 @@ def label_from_path(path):
     stem = Path(path).stem
     sample_number, separator, label = stem.partition("-")
     if separator and sample_number.isdecimal() and label:
-        return label
+        return label.removesuffix("-samples") or "UNBEKANNT"
 
     label, separator, sample_number = stem.rpartition("_")
     if separator and label and sample_number.isdecimal():
-        return label
+        return label.removesuffix("-samples") or "UNBEKANNT"
 
     return "UNBEKANNT"
 

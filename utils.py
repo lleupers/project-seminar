@@ -19,6 +19,9 @@ class LandmarkProcessing:
 
     def img2landmark(self, path: str) -> torch.tensor:
         mp_image = mp.Image.create_from_file(path)  # load image
+        return self.image2landmark(mp_image)
+
+    def image2landmark(self, mp_image: mp.Image) -> torch.Tensor:
         sample = torch.zeros(size=(21, 3), dtype=torch.float)
         result = self.landmarker.detect(mp_image)  # extract landmarks
         # turn landmarks into vector
