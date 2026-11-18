@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import components.kNN as knn
+import prototype.components.kNN as knn
 
 
 BASE_DIR = Path(__file__).resolve().parent

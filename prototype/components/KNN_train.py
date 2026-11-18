@@ -1,5 +1,5 @@
 from pathlib import Path
-import kNN
+import prototype.components.kNN as kNN
 from datetime import datetime
 
 # Generates unique run ID based on the current timestamp.

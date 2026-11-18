@@ -1,4 +1,4 @@
-import components.kNN as knn
+import prototype.components.kNN as knn
 from datetime import datetime
 
 # Generates unique run ID based on the current timestamp.

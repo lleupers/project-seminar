@@ -6,7 +6,7 @@ import numpy as np
 
 from tqdm import tqdm
 from torch.utils.data import Dataset
-from utils import LandmarkProcessing
+from prototype.utils import LandmarkProcessing
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".bmp"}
 
@@ -100,7 +100,8 @@ if __name__ == "__main__":
         ):
             sample = processor.img2landmark(path)
             # save sample
-            image_class = path.split("/")[-2]  # get image class
+            # image_class = path.split("/")[-2]  # get image class
+            image_class = os.path.basename(os.path.dirname(path))
             if np.random.uniform() < args.test_split:
                 save_path = f"{test_path}/{p:05d}-{image_class}.pt"
             else:

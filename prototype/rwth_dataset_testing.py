@@ -4,12 +4,12 @@ from urllib.request import urlopen, urlretrieve
 import cv2
 
 import mediapipe as mp
-from utils import LandmarkProcessing
+from prototype.utils import LandmarkProcessing
 
 import torch
 
-from autoencoder.model import HandAutoencoder
-from components.kNN import load_latents, predict, train_knn
+from prototype.autoencoder.model import HandAutoencoder
+from prototype.components.kNN import load_latents, predict, train_knn
 import numpy as np
 
 from string import ascii_uppercase

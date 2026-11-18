@@ -1,4 +1,4 @@
-import components.kNN as kNN
+import prototype.components.kNN as kNN
 from datetime import datetime
 from pathlib import Path
 
