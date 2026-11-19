@@ -1,0 +1,10 @@
+data/*
+!data/test/.gitkeep
+!data/train/.gitkeep
+raw_data/*
+!raw_data/.gitkeep
+.vscode/
+__pycache__
+.vscode/settings.json
+.venv/
+autoencoder/outputs/
